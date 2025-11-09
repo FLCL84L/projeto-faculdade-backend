@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { swaggerUi, specs } = require("./swagger");
+const db = require("./db");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,8 +19,13 @@ app.use(
   })
 );
 
-app.get("/time", (req, res) => {
-  res.status(200);
+app.get("/Time", async (req, res) => {
+  try {
+    const r = await db.query("SELECT * FROM Time");
+    res.json = r.rows(0);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
 });
 
 const routes = require("./routes/rota");
