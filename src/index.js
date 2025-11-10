@@ -42,6 +42,19 @@ app.get("/times/:id", async (req, res) => {
   }
 });
 
+app.get("/times/:id/jogadores", async (req, res) => {
+  try{
+    let id = req.params.id;
+    const r = await db.query("SELECT * FROM Jogador WHERE id_time = $1", [id]);
+    if(r.rows.length > 0){
+      return res.json(r.rows);
+    }
+    res.status(404).json({ msg: "Time não encontrado." });
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+});
+
 app.post("/times", async (req, res) => {
   try {
     const { nome } = req.body;
@@ -166,6 +179,19 @@ app.get("/campeonatos/:id", async (req, res) => {
       return res.json(r.rows[0]);
     }
     res.status(404).json({ msg: "Campeonato não encontrado." });
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+});
+
+app.get("/campeonatos/:id/times", async (req, res) => {
+  try {
+    let id = req.params.id;
+    const r = await db.query("SELECT t.nome FROM Campeonato c inner join Time_Campeonato tc on c.id = tc.id_campeonato inner join Time t on tc.id_time = t.id WHERE c.id = $1", [id]);
+    if (r.rows.length > 0) {
+      return res.json(r.rows);
+    }
+    res.status(404).json({ msg: "Nenhum time encontrado para esse campeonato" });
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
