@@ -5,7 +5,7 @@ const db = require("./db");
 const campeonatos = require("./routes/campeonatos");
 const jogadores = require("./routes/jogadores")
 const times = require("./routes/times");
-const time_campeonato = require("./routes/time_campeonato");
+const participacao = require("./routes/participacao");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,15 +23,14 @@ app.use(
   })
 );
 
-app.use("/campeonatos", campeonatos);
-app.use("/jogadores", jogadores);
-app.use("/times", times);
-app.use("/campeonatos", time_campeonato);
-
 //--------- Routes e Listen ---------
 
 const routes = require("./routes/rota");
 app.use("/", routes);
+app.use("/campeonatos", campeonatos);
+app.use("/jogadores", jogadores);
+app.use("/times", times);
+app.use("/participacao", participacao);
 
 app.listen(port, () => {
   console.log(`Servidor executando em http://localhost:${port}`);
